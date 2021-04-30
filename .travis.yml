@@ -1,0 +1,7 @@
+language: java
+
+services:
+  - docker
+
+after_success:
+  - docker build -t iexec/technical-test .
