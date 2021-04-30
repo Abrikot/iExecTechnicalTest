@@ -3,5 +3,10 @@ language: java
 services:
   - docker
 
-after_success:
+script:
+  - docker login -u="$DOCKER_USERNAME"
+  - gradlew assemble
   - docker build -t iexec/technical-test .
+  - docker images
+  - docker tag iexec/technical-test abrikot/iexec/technical-test
+  - docker push abrikot/iexec/technical-test
