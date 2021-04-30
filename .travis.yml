@@ -6,7 +6,7 @@ services:
 script:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - ./gradlew assemble
-  - docker build -t iexec/technical-test .
+  - docker build -t iexec-technical-test .
   - docker images
-  - docker tag iexec/technical-test abrikot/iexec/technical-test
-  - docker push abrikot/iexec/technical-test
+  - docker tag iexec-technical-test abrikot/iexec-technical-test
+  - docker push abrikot/iexec-technical-test
