@@ -12,5 +12,4 @@ public class IexecApplication {
     public static void main(String[] args) {
         SpringApplication.run(IexecApplication.class, args);
     }
-
 }

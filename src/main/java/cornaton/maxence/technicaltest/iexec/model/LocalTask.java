@@ -1,9 +1,13 @@
 package cornaton.maxence.technicaltest.iexec.model;
 
+import org.springframework.data.annotation.Id;
+
 import java.time.LocalDateTime;
 
 public class LocalTask {
-    private Long id;
+
+    @Id
+    private String id;
     private LocalDateTime date;
 
     public LocalTask() {
@@ -13,16 +17,16 @@ public class LocalTask {
         this.date = date;
     }
 
-    public LocalTask(Long id, LocalDateTime date) {
+    public LocalTask(String id, LocalDateTime date) {
         this.id = id;
         this.date = date;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
