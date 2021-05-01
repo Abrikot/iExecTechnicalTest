@@ -1,6 +1,7 @@
 package cornaton.maxence.technicaltest.iexec.service;
 
 import cornaton.maxence.technicaltest.iexec.dao.LocalTaskRepository;
+import cornaton.maxence.technicaltest.iexec.exceptions.DatabaseException;
 import cornaton.maxence.technicaltest.iexec.model.LocalTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,10 @@ public class DatabaseLocalTaskServiceImpl implements LocalTaskService {
      *
      * @param task The {@link LocalTask} to store.
      * @return The {@link LocalTask} with a potentially newly created ID.
+     * @throws DatabaseException If the database has encountered an exception (e.g. it has been closed).
      */
     @Override
-    public LocalTask storeTask(LocalTask task) {
+    public LocalTask storeTask(LocalTask task) throws DatabaseException {
         return localTaskRepository.save(task);
     }
 
@@ -29,9 +31,10 @@ public class DatabaseLocalTaskServiceImpl implements LocalTaskService {
      * Compute the number of tasks stored in the database.
      *
      * @return The number of tasks stored in the database.
+     * @throws DatabaseException If the database has encountered an exception (e.g. it has been closed).
      */
     @Override
-    public long countTasks() {
+    public long countTasks() throws DatabaseException {
         return localTaskRepository.count();
     }
 }

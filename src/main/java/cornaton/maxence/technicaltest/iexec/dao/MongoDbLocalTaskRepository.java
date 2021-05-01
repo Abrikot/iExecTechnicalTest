@@ -1,6 +1,8 @@
 package cornaton.maxence.technicaltest.iexec.dao;
 
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
+import cornaton.maxence.technicaltest.iexec.exceptions.DatabaseException;
 import cornaton.maxence.technicaltest.iexec.model.LocalTask;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +28,15 @@ public class MongoDbLocalTaskRepository implements LocalTaskRepository {
      * @param localTask The {@link LocalTask} to store.
      * @param <S>       A {@link LocalTask}-based class.
      * @return The stored {@link LocalTask} with a newly created ID.
+     * @throws DatabaseException If the database has encountered an exception (e.g. it has been closed).
      */
     @Override
-    public <S extends LocalTask> S save(S localTask) {
-        return operations.save(localTask);
+    public <S extends LocalTask> S save(S localTask) throws DatabaseException {
+        try {
+            return operations.save(localTask);
+        } catch (MongoException e) {
+            throw new DatabaseException("The LocalTask creation has failed.", e);
+        }
     }
 
     /**
@@ -38,11 +45,16 @@ public class MongoDbLocalTaskRepository implements LocalTaskRepository {
      * if the dataset is big.
      *
      * @return The number of tasks stored in the database.
+     * @throws DatabaseException If the database has encountered an exception (e.g. it has been closed).
      */
     @Override
-    public long count() {
-        final String collectionName = operations.getCollectionName(LocalTask.class);
-        MongoCollection<Document> collection = operations.getCollection(collectionName);
-        return collection.countDocuments();
+    public long count() throws DatabaseException {
+        try {
+            final String collectionName = operations.getCollectionName(LocalTask.class);
+            MongoCollection<Document> collection = operations.getCollection(collectionName);
+            return collection.countDocuments();
+        } catch (MongoException e) {
+            throw new DatabaseException("The LocalTask count has failed.", e);
+        }
     }
 }
