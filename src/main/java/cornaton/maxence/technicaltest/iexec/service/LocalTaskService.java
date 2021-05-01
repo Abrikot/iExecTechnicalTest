@@ -10,7 +10,18 @@ import cornaton.maxence.technicaltest.iexec.model.LocalTask;
  * </ul>
  */
 public interface LocalTaskService {
-    boolean createTask(LocalTask task);
+    /**
+     * Store the task in the defined memory holder.
+     *
+     * @param task The {@link LocalTask} to store.
+     * @return The {@link LocalTask} with a potentially newly created ID.
+     */
+    LocalTask storeTask(LocalTask task);
 
+    /**
+     * Compute the number of tasks stored in the memory.
+     *
+     * @return The number of tasks stored in the memory.
+     */
     long countTasks();
 }
