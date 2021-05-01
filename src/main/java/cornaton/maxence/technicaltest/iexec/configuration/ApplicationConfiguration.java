@@ -14,6 +14,10 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
 @Configuration
 @EnableMongoRepositories
 public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
@@ -48,11 +52,16 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
         return MongoClients.create("mongodb://" + dbHost + ":" + defaultDbPort + "/" + getDatabaseName());
     }
 
+    private static final List<String> databaseHostProviders = Arrays.asList(
+            System.getenv("DB_HOST"),
+            System.getProperty("DB_HOST")
+    );
+
     private String getDatabaseHost() {
-        String dbHost = System.getenv("DB_HOST");
-        if (dbHost == null) {
-            dbHost = defaultDbHost;
-        }
-        return dbHost;
+        return databaseHostProviders
+                .stream()
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(defaultDbHost);
     }
 }
