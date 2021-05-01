@@ -1,6 +1,7 @@
 package cornaton.maxence.technicaltest.iexec.configuration;
 
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import cornaton.maxence.technicaltest.iexec.dao.LocalTaskRepository;
 import cornaton.maxence.technicaltest.iexec.dao.MongoDbLocalTaskRepository;
 import cornaton.maxence.technicaltest.iexec.service.DatabaseLocalTaskServiceImpl;
@@ -18,6 +19,12 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
     @Value("${db.name}")
     private String dbName;
+
+    @Value("${db.host:127.0.0.1}")
+    private String defaultDbHost;
+
+    @Value("${db.port:27017}")
+    private String defaultDbPort;
 
     @Bean
     public LocalTaskService localTaskService() {
@@ -37,6 +44,15 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        return super.mongoClient();
+        final String dbHost = getDatabaseHost();
+        return MongoClients.create("mongodb://" + dbHost + ":" + defaultDbPort + "/" + getDatabaseName());
+    }
+
+    private String getDatabaseHost() {
+        String dbHost = System.getenv("DB_HOST");
+        if (dbHost == null) {
+            dbHost = defaultDbHost;
+        }
+        return dbHost;
     }
 }
