@@ -91,3 +91,11 @@ variable and to change the `link` parameter:
 docker run --name ${MONGO_CONTAINER_NAME} -p 27017:27017 -d -t mongo
 docker run --rm --name iexec --link ${MONGO_CONTAINER_NAME} --env DB_HOST=${MONGO_CONTAINER_NAME} -p 8080:8080 -t iexec
 ```
+
+## Defining the properties
+
+The application supports two ways to define some properties:
+
+- Using variable environments as screaming snake case (e.g. `DB_NAME`);
+- Using Java properties as lowercase separated by points (e.g. `db.name`). The first is most significant than the
+  second, meaning that if a property is defined in both way, it will take the value of the variable environment.
