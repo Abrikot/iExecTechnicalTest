@@ -11,12 +11,11 @@ The following features are currently available:
 
 1. An API allows to create tasks and retrieve the count of tasks.
 2. These tasks are stored in a database.
+3. Requesting the count of tasks on an already-deployed Smart-Contract.
 
-The following features are still to be added:
+The following feature is still to be added:
 
-1. Adding a new endpoint GET /blockchain/tasks/count allowing to call the taskCount() function of a Smart-Contract
-   already deployed on Goerli.
-2. Adding a new endpoint POST /blockchain/tasks allowing to trigger the newTask() function on the same Smart-Contract.
+1. Adding a new endpoint POST /blockchain/tasks allowing to trigger the newTask() function on the same Smart-Contract.
    The BlockchainTask (with transaction ID and date) should be stored in MongoDB in a dedicated collection (
    BlockchainTask collection).
 
