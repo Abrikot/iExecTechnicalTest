@@ -1,5 +1,7 @@
 # iExecTechnicalTest
 
+[![Build Status](https://travis-ci.com/Abrikot/iExecTechnicalTest.svg?branch=master)](https://travis-ci.com/Abrikot/iExecTechnicalTest)
+
 ## Overview
 
 This project presents the result of the technical test offer by iExec. It is composed of a few steps, some of them being
