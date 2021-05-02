@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id 'org.web3j' version '4.8.4'
 }
 
 group = 'cornaton.maxence.technicaltest'
@@ -10,6 +12,17 @@ sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
+    jcenter()
+}
+
+web3j {
+    generatedPackageName = 'org.web3j.generated.contracts'
+    excludedContracts = ['Mortal']
+}
+
+ext {
+    web3jVersion = '4.8.4'
+    logbackVersion = '1.2.3'
 }
 
 dependencies {
@@ -22,8 +35,12 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+
+    implementation 'org.web3j:web3j-spring-boot-starter:1.6.0'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.3.1'
 }
 
 test {

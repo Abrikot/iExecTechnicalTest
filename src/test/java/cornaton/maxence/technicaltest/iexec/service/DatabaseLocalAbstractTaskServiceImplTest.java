@@ -1,6 +1,5 @@
 package cornaton.maxence.technicaltest.iexec.service;
 
-import com.mongodb.client.MongoClient;
 import cornaton.maxence.technicaltest.iexec.model.LocalTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,21 +8,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
- * This will execute all the tests of {@link LocalTaskServiceTest} using a database storage.
+ * This will execute every test of {@link LocalTaskServiceTest} using a database storage.
  * Note that it will fail if the database can't be reached.
  */
-
 @SpringBootTest
-class DatabaseLocalTaskServiceImplTest extends LocalTaskServiceTest {
+class DatabaseLocalAbstractTaskServiceImplTest extends LocalTaskServiceTest {
     @Autowired
     @Qualifier("databaseLocalTaskServiceImpl")
     private LocalTaskService localTaskService;
     @Autowired
     private MongoOperations operations;
-    @Autowired
-    private MongoClient mongoClient;
 
-    public LocalTaskService getLocalTaskService() {
+    public LocalTaskService getTaskService() {
         return localTaskService;
     }
 
