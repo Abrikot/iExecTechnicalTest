@@ -101,3 +101,11 @@ The application supports two ways to define some properties:
 - Using variable environments as screaming snake case (e.g. `DB_NAME`);
 - Using Java properties as lowercase separated by points (e.g. `db.name`). The first is most significant than the
   second, meaning that if a property is defined in both way, it will take the value of the variable environment.
+
+The following properties can be defined to customize the application:
+
+- DB_HOST
+- DB_NAME
+- DB_PORT
+- BLOCKCHAIN_ID
+- BLOCKCHAIN_CONTRACT_URL
