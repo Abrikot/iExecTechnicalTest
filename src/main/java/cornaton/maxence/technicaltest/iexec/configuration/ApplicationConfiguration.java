@@ -4,11 +4,14 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import cornaton.maxence.technicaltest.iexec.dao.MongoDbLocalTaskRepository;
 import cornaton.maxence.technicaltest.iexec.dao.TaskRepository;
+import cornaton.maxence.technicaltest.iexec.exceptions.UndefinedPropertyException;
 import cornaton.maxence.technicaltest.iexec.model.LocalTask;
 import cornaton.maxence.technicaltest.iexec.service.BlockchainTaskService;
 import cornaton.maxence.technicaltest.iexec.service.BlockchainTaskServiceImpl;
 import cornaton.maxence.technicaltest.iexec.service.DatabaseLocalTaskServiceImpl;
 import cornaton.maxence.technicaltest.iexec.service.LocalTaskService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +46,7 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
             property -> System.getenv(property.name()),
             property -> System.getProperty(property.name().toLowerCase(Locale.ROOT).replaceAll("_", "."))
     );
+    protected final Logger log = LogManager.getLogger(this.getClass());
 
     @Bean
     public LocalTaskService localTaskService() {
@@ -51,13 +55,13 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return getProperty(ConfigurationProperty.DB_NAME);
+        return getRequiredProperty(ConfigurationProperty.DB_NAME);
     }
 
     @Override
     public MongoClient mongoClient() {
-        final String dbHost = getProperty(ConfigurationProperty.DB_HOST);
-        final String dbPort = getProperty(ConfigurationProperty.DB_PORT);
+        final String dbHost = getRequiredProperty(ConfigurationProperty.DB_HOST);
+        final String dbPort = getRequiredProperty(ConfigurationProperty.DB_PORT);
         return MongoClients.create("mongodb://" + dbHost + ":" + dbPort + "/" + getDatabaseName());
     }
 
@@ -67,14 +71,34 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
      *
      * @param property Property whose value should be retrieved.
      * @return The value of the property found in the first provider or a default value if no provider declares that value.
+     * @throws UndefinedPropertyException If a property has no default value and no provider has been able to provide its value.
      */
-    private String getProperty(ConfigurationProperty property) {
+    private String getProperty(ConfigurationProperty property) throws UndefinedPropertyException {
         return propertyProviders
                 .stream()
                 .map(provider -> provider.apply(property))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElse(property.getDefaultValue());
+                .orElseGet(property::getDefaultValue);
+    }
+
+    /**
+     * Loop through all declared property providers to find the value of given property.
+     * If no provider declares that value, a default value is returned instead.
+     * If no default value is declared, then the application is killed.
+     *
+     * @param property Property whose value should be retrieved.
+     * @return The value of the property found in the first provider or a default value if no provider declares that value.
+     */
+    private String getRequiredProperty(ConfigurationProperty property) {
+        try {
+            return getProperty(property);
+        } catch (UndefinedPropertyException e) {
+            log.error("Can't find a required property. Exiting the app...");
+            log.error(e);
+            System.exit(-1);
+            return null;
+        }
     }
 
     @Bean
@@ -86,9 +110,10 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
     @Bean
     @Autowired
     public TransactionManager transactionManager(Web3j web3j) {
-        final String contractUrl = getProperty(ConfigurationProperty.BLOCKCHAIN_CONTRACT_URL);
-        final long chainId = Long.parseLong(getProperty(ConfigurationProperty.BLOCKCHAIN_ID));
-        return new RawTransactionManager(web3j, Credentials.create(contractUrl), chainId);
+        System.out.println(System.getenv());
+        final String privateKey = getRequiredProperty(ConfigurationProperty.BLOCKCHAIN_PRIVATE_KEY);
+        final long chainId = Long.parseLong(getRequiredProperty(ConfigurationProperty.BLOCKCHAIN_ID));
+        return new RawTransactionManager(web3j, Credentials.create(privateKey), chainId);
     }
 
     @Bean
@@ -99,7 +124,14 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
     @Bean
     @Autowired
     public TaskCounter taskCounter(Web3j web3j, TransactionManager transactionManager) {
-        final String contractUrl = getProperty(ConfigurationProperty.BLOCKCHAIN_CONTRACT_URL);
-        return TaskCounter.load(contractUrl, web3j, transactionManager, new StaticGasProvider(BigInteger.valueOf(2000000000), BigInteger.valueOf(2000000000)));
+        final String contractUrl = getRequiredProperty(ConfigurationProperty.BLOCKCHAIN_CONTRACT_TASKCOUNT_URL);
+        final String gasPrice = getRequiredProperty(ConfigurationProperty.BLOCKCHAIN_GAS_PRICE);
+        final String gasLimit = getRequiredProperty(ConfigurationProperty.BLOCKCHAIN_GAS_LIMIT);
+        return TaskCounter.load(
+                contractUrl,
+                web3j,
+                transactionManager,
+                new StaticGasProvider(new BigInteger(gasPrice), new BigInteger(gasLimit))
+        );
     }
 }
