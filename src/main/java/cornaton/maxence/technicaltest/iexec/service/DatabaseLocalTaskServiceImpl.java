@@ -1,18 +1,21 @@
 package cornaton.maxence.technicaltest.iexec.service;
 
-import cornaton.maxence.technicaltest.iexec.dao.LocalTaskRepository;
+import cornaton.maxence.technicaltest.iexec.dao.TaskRepository;
 import cornaton.maxence.technicaltest.iexec.exceptions.DatabaseException;
 import cornaton.maxence.technicaltest.iexec.model.LocalTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service to handle every {@link LocalTask} action related to the database storage.
+ */
 @Service
 public class DatabaseLocalTaskServiceImpl implements LocalTaskService {
-    private LocalTaskRepository localTaskRepository;
+    private TaskRepository<LocalTask> taskRepository;
 
     @Autowired
-    public void setLocalTaskRepository(LocalTaskRepository localTaskRepository) {
-        this.localTaskRepository = localTaskRepository;
+    public void setTaskRepository(TaskRepository<LocalTask> localTaskRepository) {
+        this.taskRepository = localTaskRepository;
     }
 
     /**
@@ -24,7 +27,7 @@ public class DatabaseLocalTaskServiceImpl implements LocalTaskService {
      */
     @Override
     public LocalTask storeTask(LocalTask task) throws DatabaseException {
-        return localTaskRepository.save(task);
+        return taskRepository.save(task);
     }
 
     /**
@@ -35,6 +38,6 @@ public class DatabaseLocalTaskServiceImpl implements LocalTaskService {
      */
     @Override
     public long countTasks() throws DatabaseException {
-        return localTaskRepository.count();
+        return taskRepository.count();
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * This will execute all the tests of {@link LocalTaskServiceTest} using an in-memory storage.
+ * This will execute every test of {@link LocalTaskServiceTest} using an in-memory storage.
  */
 @SpringBootTest
 public class InMemLocalTaskServiceImplTest extends LocalTaskServiceTest {
@@ -14,7 +14,7 @@ public class InMemLocalTaskServiceImplTest extends LocalTaskServiceTest {
     private LocalTaskService localTaskService;
 
     @Override
-    protected LocalTaskService getLocalTaskService() {
+    protected LocalTaskService getTaskService() {
         return localTaskService;
     }
 }

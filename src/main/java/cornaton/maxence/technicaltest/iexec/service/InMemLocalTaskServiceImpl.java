@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service to handle every {@link LocalTask} action related to the in-mem storage.
+ */
 @Service
 public class InMemLocalTaskServiceImpl implements LocalTaskService {
     private final List<LocalTask> tasks = new ArrayList<>();
