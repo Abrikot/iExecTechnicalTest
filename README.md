@@ -118,3 +118,17 @@ variable and to change the `link` parameter:
 docker run --name ${MONGO_CONTAINER_NAME} -p 27017:27017 -d -t mongo
 docker run --rm --name iexec --link ${MONGO_CONTAINER_NAME} --env DB_HOST=${MONGO_CONTAINER_NAME} --env BLOCKCHAIN_PRIVATE_KEY=${PRIVATE_KEY} -p 8080:8080 -t iexec
 ```
+
+### Testing
+
+The easiest way to start tests is to run the gradle test command:
+
+```shell
+# If Gradle is installed globally:
+gradle test
+
+# If Gradle is installed locally:
+./gradlew test
+```
+
+Please note that the MongoDB server should be up and reachable to ensure the tests will work.
