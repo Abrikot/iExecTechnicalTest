@@ -119,6 +119,14 @@ docker run --name ${MONGO_CONTAINER_NAME} -p 27017:27017 -d -t mongo
 docker run --rm --name iexec --link ${MONGO_CONTAINER_NAME} --env DB_HOST=${MONGO_CONTAINER_NAME} --env BLOCKCHAIN_PRIVATE_KEY=${PRIVATE_KEY} -p 8080:8080 -t iexec
 ```
 
+#### Build & run in a single step
+
+The project provides a `docker-compose` configuration file, so it can be run in a single and easy command line:
+
+```shell
+docker-compose up
+```
+
 ### Testing
 
 The easiest way to start tests is to run the gradle test command:
