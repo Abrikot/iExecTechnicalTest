@@ -1,5 +1,6 @@
 package cornaton.maxence.technicaltest.iexec.service;
 
+import cornaton.maxence.technicaltest.iexec.AbstractBaseTests;
 import cornaton.maxence.technicaltest.iexec.exceptions.IexecAbstractException;
 import cornaton.maxence.technicaltest.iexec.model.AbstractTask;
 import org.junit.jupiter.api.Assertions;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.function.Function;
 
-public abstract class AbstractTaskServiceTest<T extends AbstractTask> {
+public abstract class AbstractTaskServiceTest<T extends AbstractTask> extends AbstractBaseTests {
     private final Function<LocalDateTime, T> taskConstructor;
 
     public AbstractTaskServiceTest(Function<LocalDateTime, T> taskConstructor) {

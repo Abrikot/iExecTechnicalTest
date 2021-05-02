@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -38,14 +39,22 @@ import java.util.function.Function;
 @Configuration
 @EnableMongoRepositories
 public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
+    private Environment environment;
     /**
      * List of all property providers. They are declared in the significant order.
      * For instance, a property that is declared as an environment variable and as a Java property will take the environment variable value.
      */
-    private static final List<Function<ConfigurationProperty, String>> propertyProviders = Arrays.asList(
+    private final List<Function<ConfigurationProperty, String>> propertyProviders = Arrays.asList(
             property -> System.getenv(property.name()),
-            property -> System.getProperty(property.name().toLowerCase(Locale.ROOT).replaceAll("_", "."))
+            property -> System.getProperty(property.name()),
+            property -> environment.getProperty(property.name().toLowerCase(Locale.ROOT).replaceAll("_", "."))
     );
+
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
     protected final Logger log = LogManager.getLogger(this.getClass());
 
     @Bean
