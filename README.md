@@ -24,7 +24,8 @@ Besides, a bunch of tools has been set up, so it's easier to build and deploy:
 
 - [a GitHub repository](https://github.com/Abrikot/iExecTechnicalTest);
 - [a Docker repository](https://hub.docker.com/r/abrikot/iexec-technical-test/tags?page=1&ordering=last_updated);
-- a Travis CI job to automatically build and upload a Docker image on every commit.
+- [a Travis CI job](https://travis-ci.com/github/Abrikot/iExecTechnicalTest) to automatically build and upload a Docker
+  image on every commit.
 
 ## Building & running
 
